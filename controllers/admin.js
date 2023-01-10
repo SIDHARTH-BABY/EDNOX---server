@@ -38,6 +38,7 @@ export const adminLogin = async (req, res) => {
     try {
         const { email, password } = req.body
 
+
         const admin = await Admin.findOne({ email: email })
 
         if (!admin) return res.status(400).json({ msg: " Admin does not exist" })

@@ -43,7 +43,7 @@ import { Server } from "socket.io";
 
 const io = new Server(httpServer,{
     cors: {
-        origin: ["https://ednox.netlify.app:3000", "http://localhost:3000","https://ednox.netlify.app"],
+        origin: ["https://ed.ednox.shop:3000", "http://localhost:3000","https://ed.ednox.shop"],
     },
   })
 

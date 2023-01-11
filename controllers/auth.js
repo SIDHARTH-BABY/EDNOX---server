@@ -84,7 +84,8 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        const { email, password } = req.body.values
+        console.log(req.body,'nowwwwwww');
+        const { email, password } = req.body
 
         const user = await User.findOne({ email: email })
 
@@ -106,6 +107,6 @@ export const login = async (req, res) => {
 
 
     } catch (error) {
-        res.status(500).json({ error: err.message })
+        res.status(500).json({ error: error.message })
     }
 }

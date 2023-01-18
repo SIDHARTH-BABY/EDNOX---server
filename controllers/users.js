@@ -115,11 +115,11 @@ export const editProfilePic = async (req, res) => {
         const user = await User.findByIdAndUpdate(id, req.body, {
             new: true,
         });
-        const token = jwt.sign({ id: user.id }, process.env.JWt_SECRET)
+        
 
 
         console.log({ user })
-        res.status(200).json({ user, token, success: true, message: 'Succesfully Changed Your Profile Picture' });
+        res.status(200).json({ user, success: true, message: 'Succesfully Changed Your Profile Picture' });
     } catch (error) {
         console.log(error, "Error ")
         res.status(400).json(error, 'hello');

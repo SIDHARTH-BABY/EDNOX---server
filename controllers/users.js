@@ -106,25 +106,25 @@ export const updateUser = async (req, res) => {
 
 
 export const editProfilePic = async (req, res) => {
-    const id = req.params.id;
-    // console.log("Data Received", req.body)
-    const { picturePath } = req.body;
-
-        try {
-
-            const user = await User.findByIdAndUpdate(id, req.body, {
-                new: true,
-            });
-            const token = jwt.sign({ id: user.id }, process.env.JWt_SECRET)
 
 
-            console.log({ user })
-            res.status(200).json({ user, token, success: true , message: 'Succesfully Changed Your Profile Picture'});
-        } catch (error) {
-            console.log(error, "Error ")
-            res.status(400).json(error, 'hello');
-        }
-    
+    try {
+        const id = req.params.id;
+        // console.log("Data Received", req.body)
+        const { picturePath } = req.body;
+        const user = await User.findByIdAndUpdate(id, req.body, {
+            new: true,
+        });
+        const token = jwt.sign({ id: user.id }, process.env.JWt_SECRET)
+
+
+        console.log({ user })
+        res.status(200).json({ user, token, success: true, message: 'Succesfully Changed Your Profile Picture' });
+    } catch (error) {
+        console.log(error, "Error ")
+        res.status(400).json(error, 'hello');
+    }
+
 };
 
 

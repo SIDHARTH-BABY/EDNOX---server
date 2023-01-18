@@ -1,4 +1,4 @@
-
+import Admin from "../models/Admin.js"
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
@@ -96,23 +96,57 @@ export const likePost = async (req, res) => {
 export const reportPost = async (req, res) => {
     try {
         const { id } = req.params;
-        const { loggedInUserId } = req.body;
+        const loggedInUserId = req.body.loggedInUserId;
         const post = await Post.findById(id);
         const isReported = post.report.get(loggedInUserId);
 
+
+
+
         if (isReported) {
             console.log("once reported");
+            res.status(200).send({
+                success: false,
+                message: "This Post, You Have Reported Once",
+            });
         } else {
             post.report.set(loggedInUserId, true);
+
+
+
+            const user = await User.findById(loggedInUserId)
+            console.log(user, "user adda ");
+
+            const admin = await Admin.findOne();
+            const unseenNotifications = admin.unseenNotifications;
+
+            unseenNotifications.push({
+                type: "New Report",
+                message: `${user.firstName} ${user.lastName} has reported an post Id ${id} of ${post.firstName} ${post.lastName}`,
+                data: {
+                    userId: user._id,
+                    message: `${user.firstName} ${user.lastName} has reported an post Id ${id} of ${post.firstName} ${post.lastName}`
+                },
+
+            });
+            console.log(admin, "ith admin addda");
+
+            await Admin.findByIdAndUpdate(admin._id, { unseenNotifications });
+            const updatedPost = await Post.findByIdAndUpdate(
+                id,
+                { report: post.report },
+                { new: true }
+            );
+
+            res.status(200).send({
+                success: true,
+                message: "Reported successfully",
+            });
         }
 
-        const updatedPost = await Post.findByIdAndUpdate(
-            id,
-            { report: post.report },
-            { new: true }
-        );
 
-        res.status(200).json(updatedPost);
+
+
     } catch (err) {
         res.status(409).json({ message: err.message });
     }
@@ -182,7 +216,35 @@ export const deletePost = async (req, res) => {
                 }
             )
 
-            res.status(200).json({ newposts, message: " Post deleted", success: true });
+            res.status(200).json({ newposts, message: "Post Deleted Successfully", success: true });
+
+        } else {
+            console.log("error");
+        }
+
+
+
+    } catch (error) {
+        res.status(500).json("hello" + error.message);
+    }
+}
+
+
+
+
+export const editPostdescription = async (req, res) => {
+    try {
+        const { description, postId } = req.body
+        console.log(postId, 'postid');
+        console.log(description, 'description');
+
+
+
+        let updateDescription = await Post.findByIdAndUpdate(postId, { description: description }, { new: true })
+        if (updateDescription) {
+            console.log(updateDescription, 'kittunath');
+
+            res.status(200).json({ updateDescription, message: " Post edited", success: true });
 
         } else {
             console.log("error");

@@ -128,3 +128,66 @@ export const viewPost = async (req, res) => {
         res.status(500).json({ error: error.message, message: "error while fetching users", success: false })
     }
 }
+
+
+
+export const markNotificationAsSeen = async (req, res) => {
+    try {
+        const admin = await Admin.findOne();
+        console.log(admin, 'kitunnnnoooo');
+        const unseenNotifications = admin.unseenNotifications;
+        const seenNotifications = admin.seenNotifications;
+        seenNotifications.push(...unseenNotifications);
+        admin.unseenNotifications = [];
+        admin.seenNotifications = seenNotifications;
+        const updatedAdmin = await admin.save();
+
+        res.status(200).send({
+            success: true,
+            message: "All notifications marked as seen",
+            data: updatedAdmin,
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({
+            message: "Error applying doctor account",
+            success: false,
+            error,
+        });
+    }
+}
+
+
+export const deleteAllnotifications = async (req, res) => {
+    try {
+        const admin = await Admin.findOne();
+        admin.seenNotifications = [];
+        admin.unseenNotifications = [];
+        const updatedAdmin = await admin.save();
+
+        res.status(200).send({
+            success: true,
+            message: "All notifications cleared",
+            data: updatedAdmin,
+        });
+    } catch (error) {
+
+    }
+}
+
+export const reportLists = async (req, res) => {
+    try {
+        const admin = await Admin.findOne();
+
+      const reportedUnseenLists = admin.unseenNotifications
+      const reportedSeenLists = admin.seenNotifications
+        console.log(reportedUnseenLists, "reportsss");
+        res.status(200).json({ message: 'reports', success: true, reportedUnseenLists,reportedSeenLists })
+
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+

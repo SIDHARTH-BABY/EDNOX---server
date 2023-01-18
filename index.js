@@ -21,7 +21,7 @@ import { verifyToken } from './middleware/auth.js';
 import User from "./models/User.js"
 import Post from './models/Post.js'
 import { users, posts } from './data/index.js'
-import { adminLogin, adminRegister, blockUser, getFullUsers, unBlockUser, viewPost } from './controllers/admin.js';
+import { adminLogin, adminRegister, blockUser, deleteAllnotifications, getFullUsers, markNotificationAsSeen, reportLists, unBlockUser, viewPost } from './controllers/admin.js';
 
 
 
@@ -38,6 +38,7 @@ const app = express()
 const httpServer = createServer(app);
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { editProfilePic } from './controllers/users.js';
 
 
 
@@ -120,6 +121,8 @@ const upload = multer({ storage })
 //ROUTES WITH FILES
 app.post("/auth/register", upload.single("picture"), register)
 app.post("/posts", verifyToken, upload.single("picture"), createPost)
+app.post("/users/profilepic-user/:id",upload.single("picture"),editProfilePic)
+
 app.post("/send-otp", sendOtp)
 app.post("/admin/register", adminRegister)
 app.post("/admin/login", adminLogin)
@@ -127,6 +130,9 @@ app.get("/admin/get-users", getFullUsers)
 app.post("/admin/block-user", blockUser)
 app.post("/admin/unblock-user", unBlockUser)
 app.post("/admin/view-post", viewPost)
+app.get("/admin/mark-all-notifications-as-seen",markNotificationAsSeen)
+app.get("/admin/delete-all-notifications",deleteAllnotifications)
+app.get("/admin/get-reports",reportLists)
 
 
 

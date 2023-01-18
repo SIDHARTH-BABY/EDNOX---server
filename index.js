@@ -42,11 +42,11 @@ import { editProfilePic } from './controllers/users.js';
 
 
 
-const io = new Server(httpServer,{
+const io = new Server(httpServer, {
     cors: {
-        origin: ["https://ed.ednox.shop:3000", "http://localhost:3000","https://ed.ednox.shop"],
+        origin: ["https://ed.ednox.shop:3000", "http://localhost:3000", "https://ed.ednox.shop"],
     },
-  })
+})
 
 
 
@@ -121,7 +121,7 @@ const upload = multer({ storage })
 //ROUTES WITH FILES
 app.post("/auth/register", upload.single("picture"), register)
 app.post("/posts", verifyToken, upload.single("picture"), createPost)
-app.post("/users/profilepic-user/:id",upload.single("picture"),editProfilePic)
+app.post("/users/profilepic-user/:id", upload.single("picture"), editProfilePic)
 
 app.post("/send-otp", sendOtp)
 app.post("/admin/register", adminRegister)
@@ -130,9 +130,9 @@ app.get("/admin/get-users", getFullUsers)
 app.post("/admin/block-user", blockUser)
 app.post("/admin/unblock-user", unBlockUser)
 app.post("/admin/view-post", viewPost)
-app.get("/admin/mark-all-notifications-as-seen",markNotificationAsSeen)
-app.get("/admin/delete-all-notifications",deleteAllnotifications)
-app.get("/admin/get-reports",reportLists)
+app.get("/admin/mark-all-notifications-as-seen", markNotificationAsSeen)
+app.get("/admin/delete-all-notifications", deleteAllnotifications)
+app.get("/admin/get-reports", reportLists)
 
 
 

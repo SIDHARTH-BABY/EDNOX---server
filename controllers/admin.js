@@ -15,7 +15,7 @@ export const adminRegister = async (req, res) => {
 
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt)
-
+        
         const newAdmin = new Admin({
 
             email,

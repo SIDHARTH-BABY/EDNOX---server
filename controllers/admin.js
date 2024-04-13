@@ -35,6 +35,7 @@ export const adminRegister = async (req, res) => {
 
 
 export const adminLogin = async (req, res) => {
+    console.log(req.body,'bodyy');
     try {
         const { email, password } = req.body
 
@@ -68,6 +69,7 @@ export const getFullUsers = async (req, res) => {
                 return { _id, firstName, lastName, location, picturePath, email, Active };
             }
         );
+        console.log(formattedFriends,'users');
         res.status(200).json({ message: 'Users', success: true, formattedFriends })
     } catch (error) {
         res.status(500).json({ error: error.message, message: "error while fetching users", success: false })

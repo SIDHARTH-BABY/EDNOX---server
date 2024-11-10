@@ -122,7 +122,6 @@ const upload = multer({ storage })
 app.post("/auth/register", upload.single("picture"), register)
 app.post("/posts", verifyToken, upload.single("picture"), createPost)
 app.post("/users/profilepic-user/:id", upload.single("picture"), editProfilePic)
-
 app.post("/send-otp", sendOtp)
 app.post("/admin/register", adminRegister)
 app.post("/admin/login", adminLogin)
@@ -147,6 +146,7 @@ app.use("/message", MessageRoute)
 
 //MONGOOSE
 const PORT = process.env.PORT || 5000
+mongoose.set('strictQuery', false); // or true, based on your preference
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true

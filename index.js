@@ -44,9 +44,9 @@ import { editProfilePic } from './controllers/users.js';
 
 const io = new Server(httpServer, {
     cors: {
-        origin: ["https://ed.ednox.shop:3000", "http://localhost:3000", "https://ed.ednox.shop"],
+        origin: ["https://ednox.netlify.app", "https://ed.ednox.shop:3000", "http://localhost:3000", "https://ed.ednox.shop"],
     },
-})
+});
 
 
 
@@ -95,10 +95,10 @@ app.use(helmet.crossOriginResourcePolicy({ "policy": "cross-origin" }))
 app.use(morgan("common"))
 app.use(bodyParser.json({ limit: "30mb", extended: true }))
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-// app.use(cors({
-//     origin:["https://ednox.netlify.app","http://localhost:3000"],
-//     credentials:true
-//   }));
+app.use(cors({
+    origin: ["https://ednox.netlify.app", "http://localhost:3000"],
+    credentials: true
+}));
 
 app.options('*', cors());
 app.use(cors());

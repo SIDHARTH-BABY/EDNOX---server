@@ -47,9 +47,24 @@ export const register = async (req, res) => {
       occupation,
     } = req.body;
 
-    const salt = await bcrypt.genSalt();
-    const passwordHash = await bcrypt.hash(password, salt);
+    // Validate required fields
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({success: false, error: "All required fields must be provided" });
+    }
 
+    // Check for duplicate email
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({success: false, error: "Email already exists. Please use a different email." });
+    }
+
+    // Generate salt and hash the password
+    const salt = await bcrypt.genSalt();
+    console.log("Generated salt:", salt); // Debugging
+    const passwordHash = await bcrypt.hash(password, salt);
+    console.log("Password hash:", passwordHash); // Debugging
+
+    // Create new user
     const newUser = new User({
       firstName,
       lastName,
@@ -64,13 +79,25 @@ export const register = async (req, res) => {
     });
 
     const savedUser = await newUser.save();
+
+    // Generate JWT token
     const token = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET);
-    const user = await User.findOne({ email: email });
+
+    // Retrieve saved user
+    const user = await User.findOne({ email });
+
+    // Return success response
     res.status(201).json({ savedUser, token, user, success: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error during registration:", err.message); // Log error details
+    if (err.code === 11000) {
+      return res.status(400).json({success: false, error: "Email already exists." });
+    }
+    res.status(500).json({ error: "An unexpected error occurred." });
   }
 };
+
+
 
 //login
 
@@ -103,3 +130,4 @@ export const login = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
